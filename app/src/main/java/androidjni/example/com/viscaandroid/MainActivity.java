@@ -1,9 +1,9 @@
 package androidjni.example.com.viscaandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -11,7 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidjni.example.com.viscaandroid.visca.ViscaConsoleActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, RadioGroup.OnCheckedChangeListener, View.OnTouchListener {
 
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RadioGroup mRadioGroup;
 
-    private int mRole = TEACHER;
+    private int mRole = 12;
 
     private EditText mServerIp;
 
@@ -53,12 +57,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button mConnect;
 
+    private int cameraID = 0;
+    private TextView tvInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        findViewById(R.id.tvTest).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ViscaConsoleActivity.class);
+                startActivity(intent);
+            }
+        });
+        tvInfo = findViewById(R.id.tvInfo);
+        findViewById(R.id.tvTest2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 12; i < 13; i++) {
+                    cameraID = i;
+                    int res = ViscaJni.getInstance().setPantiltPos(cameraID, CAM_LEFT, true);
+                    if (res == 0) {
+                        tvInfo.setText(tvInfo.getText().toString() + "   成功: " + cameraID);
+                    } else {
+                        Log.i("result", "失败: " + cameraID);
+                    }
+                }
+            }
+        });
         //ViscaJni.getInstance().setTraceCameraAddress(CAMERA_IP, CAMERA_PORT);
     }
 

@@ -68,11 +68,19 @@ public class ViscaJni {
     public native int reCallCamMemory(int camId, int channel);
 
     /**
-     *  设置焦距
+     * 设置焦距
+     *
      * @param camId int 值，1 为老师，2为学生
-     * @param far true 远 false 近
+     * @param far   true 远 false 近
      * @return 0 success,otherwise failure.
      */
-    public native int setZoomPosition(int camId,boolean far);
+    public native int setZoomPosition(int camId, boolean far);
+
+    /**
+     * 关闭连接
+     *
+     * @return 1
+     */
+    public native int closeSocket();
 
 }
