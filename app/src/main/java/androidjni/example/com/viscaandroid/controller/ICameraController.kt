@@ -16,8 +16,18 @@ interface ICameraController {
 
     fun turnRight() {}  //右转
 
-    fun turnTop() {}   //上转
+    fun turnUp() {}   //上转
 
-    fun turnBottom() {}  //下转
+    fun turnDown() {}  //下转
+
+    fun turnLeftAndUp() {}
+
+    fun turnRightAndUp() {}
+
+    fun turnLeftAndDown() {}
+
+    fun turnRightAndDown() {}
+
+    fun turnStop() {} //停止
 
 }

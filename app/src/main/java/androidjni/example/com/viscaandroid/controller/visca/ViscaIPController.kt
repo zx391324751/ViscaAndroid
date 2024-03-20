@@ -37,4 +37,24 @@ abstract class ViscaIPController : ICameraController {
     protected fun getTurnDownCommand(cameraID: Int): ByteArray {
         return ViscaCommand.getTurnDownCommandData(cameraID)
     }
+
+    protected fun getTurnLeftAndUpCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getTurnUpAndLeftCommandData(cameraID)
+    }
+
+    protected fun getTurnLeftAndDownCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getTurnDownAndLeftCommandData(cameraID)
+    }
+
+    protected fun getTurnRightAndUpCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getTurnUpAndRightCommandData(cameraID)
+    }
+
+    protected fun getTurnRightAndDownCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getTurnDownAndRightCommandData(cameraID)
+    }
+
+    protected fun getTurnStopCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getStopTurnData(cameraID)
+    }
 }

@@ -17,15 +17,12 @@ import android.util.Log
  */
 object ViscaCommand {
 
-    val commandMap = HashMap<String, String>().apply {
-        put("LEFT", "8101060106060103FF")
-    }
-
-    const val VISCA_COMMAND: Byte = 0x01  //普通命令
-    const val VISCA_INQUIRY: Byte = 0x09  //查询命令
+    private const val VISCA_COMMAND: Byte = 0x01  //普通命令
+    private const val VISCA_INQUIRY: Byte = 0x09  //查询命令
 
     private val VISCA_TERMINATOR: Byte = (0xFF).toUInt().toByte()     //结束符
-    const val VISCA_CATEGORY_PAN_TILTER: Byte = 0x06
+    private const val VISCA_CATEGORY_PAN_TILTER: Byte = 0x06
+    private const val VISCA_SPEED: Byte = 0x06
 
     fun getTurnLeftCommandData(cameraID: Int): ByteArray {
         val byteArray = ByteArray(16)
@@ -33,13 +30,13 @@ object ViscaCommand {
         byteArray[1] = VISCA_COMMAND
         byteArray[2] = VISCA_CATEGORY_PAN_TILTER
         byteArray[3] = 0x01
-        byteArray[4] = 0x10
-        byteArray[5] = 0x10
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
         byteArray[6] = 0x01
         byteArray[7] = 0x03
         byteArray[8] = VISCA_TERMINATOR
         printByteArray(byteArray)
-        return byteArray
+        return packViscaHeaderByteArray(byteArray)
     }
 
     fun getTurnRightCommandData(cameraID: Int): ByteArray {
@@ -48,13 +45,13 @@ object ViscaCommand {
         byteArray[1] = VISCA_COMMAND
         byteArray[2] = VISCA_CATEGORY_PAN_TILTER
         byteArray[3] = 0x01
-        byteArray[4] = 0x10
-        byteArray[5] = 0x10
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
         byteArray[6] = 0x02
         byteArray[7] = 0x03
         byteArray[8] = VISCA_TERMINATOR
         printByteArray(byteArray)
-        return byteArray
+        return packViscaHeaderByteArray(byteArray)
     }
 
     fun getTurnUpCommandData(cameraID: Int): ByteArray {
@@ -63,13 +60,13 @@ object ViscaCommand {
         byteArray[1] = VISCA_COMMAND
         byteArray[2] = VISCA_CATEGORY_PAN_TILTER
         byteArray[3] = 0x01
-        byteArray[4] = 0x10
-        byteArray[5] = 0x10
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
         byteArray[6] = 0x03
         byteArray[7] = 0x01
         byteArray[8] = VISCA_TERMINATOR
         printByteArray(byteArray)
-        return byteArray
+        return packViscaHeaderByteArray(byteArray)
     }
 
     fun getTurnDownCommandData(cameraID: Int): ByteArray {
@@ -78,13 +75,88 @@ object ViscaCommand {
         byteArray[1] = VISCA_COMMAND
         byteArray[2] = VISCA_CATEGORY_PAN_TILTER
         byteArray[3] = 0x01
-        byteArray[4] = 0x10
-        byteArray[5] = 0x10
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
         byteArray[6] = 0x03
         byteArray[7] = 0x02
         byteArray[8] = VISCA_TERMINATOR
         printByteArray(byteArray)
-        return byteArray
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getTurnUpAndLeftCommandData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x01
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
+        byteArray[6] = 0x01
+        byteArray[7] = 0x01
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getTurnUpAndRightCommandData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x01
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
+        byteArray[6] = 0x02
+        byteArray[7] = 0x01
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getTurnDownAndLeftCommandData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x01
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
+        byteArray[6] = 0x01
+        byteArray[7] = 0x02
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getTurnDownAndRightCommandData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x01
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
+        byteArray[6] = 0x02
+        byteArray[7] = 0x02
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getStopTurnData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x01
+        byteArray[4] = VISCA_SPEED
+        byteArray[5] = VISCA_SPEED
+        byteArray[6] = 0x03
+        byteArray[7] = 0x03
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
     }
 
     fun getZoomWideData(cameraID: Int): ByteArray {
@@ -96,7 +168,7 @@ object ViscaCommand {
         byteArray[4] = 0x03
         byteArray[5] = VISCA_TERMINATOR
         printByteArray(byteArray)
-        return byteArray
+        return packViscaHeaderByteArray(byteArray)
     }
 
     fun getZoomTeleData(cameraID: Int): ByteArray {
@@ -108,11 +180,29 @@ object ViscaCommand {
         byteArray[4] = 0x02
         byteArray[5] = VISCA_TERMINATOR
         printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    /**
+     * 包装Visca Header，所有控制指令的header都相同。
+     */
+    private fun packViscaHeaderByteArray(temp: ByteArray): ByteArray {
+        val byteArray = ByteArray(24)
+        byteArray[0] = 0x01
+        byteArray[1] = 0x00
+        byteArray[2] = 0x00
+        byteArray[3] = 0x10
+        byteArray[4] = 0x00
+        byteArray[5] = 0x00
+        byteArray[6] = 0x00
+        byteArray[7] = 0x00
+        for (i in 8 until 24) {
+            byteArray[i] = temp[i - 8]
+        }
         return byteArray
     }
 
-
-    private fun printByteArray(byteArray: ByteArray) {
+    fun printByteArray(byteArray: ByteArray) {
         Log.i("byte data", "------------------ ")
         Log.i("byte data", "start ------------ ")
         for (item in byteArray) {

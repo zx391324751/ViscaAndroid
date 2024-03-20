@@ -5,8 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidjni.example.com.viscaandroid.R
-import androidjni.example.com.viscaandroid.controller.BaseConfig
-import androidjni.example.com.viscaandroid.controller.ControllerFactory
+import androidjni.example.com.viscaandroid.controller.*
 import androidjni.example.com.viscaandroid.controller.visca.ViscaIPConfig
 import androidx.appcompat.app.AppCompatActivity
 
@@ -21,10 +20,6 @@ class ViscaConsoleActivity : AppCompatActivity() {
     private val viscalUDPSocket by lazy {
         ControllerFactory().createController(config)
     }
-    private lateinit var btnLeft: Button
-    private lateinit var btnRight: Button
-    private lateinit var btnTop: Button
-    private lateinit var btnBottom: Button
     private lateinit var etInputIp: EditText
     private lateinit var etInputPort: EditText
 
@@ -36,26 +31,45 @@ class ViscaConsoleActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        btnLeft = findViewById(R.id.btnTurnLeft)
-        btnRight = findViewById(R.id.btnTurnRight)
-        btnTop = findViewById(R.id.btnTurnTop)
-        btnBottom = findViewById(R.id.btnTurnBottom)
-        btnLeft.setOnClickListener {
-            viscalUDPSocket?.turnLeft()
-        }
-        btnRight.setOnClickListener {
-            viscalUDPSocket?.turnRight()
-        }
-        btnTop.setOnClickListener {
-            viscalUDPSocket?.turnTop()
-        }
-        btnBottom.setOnClickListener {
-            viscalUDPSocket?.turnBottom()
-        }
         findViewById<View>(R.id.btnConnect).setOnClickListener {
             config.ipAddress = etInputIp.text.toString().trim()
             config.port = etInputPort.text.toString().trim().toInt()
             viscalUDPSocket?.initConfig(config)
+        }
+        findViewById<ControllerView>(R.id.controllerView).let {
+            it.controllerListener = object : ControllerView.ControllerListener {
+                override fun onControl(director: Int, isFinishControl: Boolean) {
+                    when (director) {
+                        CONTROLLER_STOP -> {
+                            viscalUDPSocket?.turnStop()
+                        }
+                        CONTROLLER_LEFT -> {
+                            viscalUDPSocket?.turnLeft()
+                        }
+                        CONTROLLER_UP -> {
+                            viscalUDPSocket?.turnUp()
+                        }
+                        CONTROLLER_RIGHT -> {
+                            viscalUDPSocket?.turnRight()
+                        }
+                        CONTROLLER_DOWN -> {
+                            viscalUDPSocket?.turnDown()
+                        }
+                        CONTROLLER_LEFT_UP -> {
+                            viscalUDPSocket?.turnLeftAndUp()
+                        }
+                        CONTROLLER_LEFT_DOWN -> {
+                            viscalUDPSocket?.turnLeftAndDown()
+                        }
+                        CONTROLLER_RIGHT_UP -> {
+                            viscalUDPSocket?.turnRightAndUp()
+                        }
+                        CONTROLLER_RIGHT_DOWN -> {
+                            viscalUDPSocket?.turnRightAndDown()
+                        }
+                    }
+                }
+            }
         }
         etInputIp = findViewById(R.id.etInputIp)
         etInputPort = findViewById(R.id.etInputPort)
