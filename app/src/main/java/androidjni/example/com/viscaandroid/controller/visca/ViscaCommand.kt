@@ -15,7 +15,7 @@ import android.util.Log
  * 2024/3/11
  * created by zhangxu
  */
-object ViscaCommand {
+internal object ViscaCommand {
 
     private const val VISCA_COMMAND: Byte = 0x01  //普通命令
     private const val VISCA_INQUIRY: Byte = 0x09  //查询命令
@@ -23,6 +23,18 @@ object ViscaCommand {
     private val VISCA_TERMINATOR: Byte = (0xFF).toUInt().toByte()     //结束符
     private const val VISCA_CATEGORY_PAN_TILTER: Byte = 0x06
     private const val VISCA_SPEED: Byte = 0x06
+
+    //回到原位
+    fun getTurnBack(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toUInt().toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = VISCA_CATEGORY_PAN_TILTER
+        byteArray[3] = 0x04
+        byteArray[8] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
 
     fun getTurnLeftCommandData(cameraID: Int): ByteArray {
         val byteArray = ByteArray(16)
@@ -178,6 +190,67 @@ object ViscaCommand {
         byteArray[2] = 0x04
         byteArray[3] = 0x07
         byteArray[4] = 0x02
+        byteArray[5] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getFocusModeData(cameraID: Int, isAuto: Boolean): ByteArray {
+        val auto: Byte = if (isAuto) 0x02 else 0x03
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = 0x04
+        byteArray[3] = 0x38
+        byteArray[4] = auto
+        byteArray[5] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getFocusFarData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = 0x04
+        byteArray[3] = 0x08
+        byteArray[4] = 0x02
+        byteArray[5] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getFocusNearData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = 0x04
+        byteArray[3] = 0x08
+        byteArray[4] = 0x03
+        byteArray[5] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getFocusStopData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = 0x04
+        byteArray[3] = 0x08
+        byteArray[4] = 0x00
+        byteArray[5] = VISCA_TERMINATOR
+        printByteArray(byteArray)
+        return packViscaHeaderByteArray(byteArray)
+    }
+
+    fun getZoomStopData(cameraID: Int): ByteArray {
+        val byteArray = ByteArray(16)
+        byteArray[0] = (0x80 or cameraID).toByte()
+        byteArray[1] = VISCA_COMMAND
+        byteArray[2] = 0x04
+        byteArray[3] = 0x07
+        byteArray[4] = 0x00
         byteArray[5] = VISCA_TERMINATOR
         printByteArray(byteArray)
         return packViscaHeaderByteArray(byteArray)

@@ -48,7 +48,7 @@ class ControllerView @JvmOverloads constructor(context: Context, attrs: Attribut
         this.controllerRect.top = 0 + ballSize / 2
         this.controllerRect.right = w - ballSize / 2
         this.controllerRect.bottom = h - ballSize / 2
-        invalidate()
+        updateTouchEvent(this.controllerRect.centerX(), this.controllerRect.centerY())
     }
 
     override fun onDraw(canvas: Canvas) {

@@ -7,7 +7,7 @@ import androidjni.example.com.viscaandroid.controller.ICameraController
  * 2024/3/11
  * created by zhangxu
  */
-abstract class ViscaIPController : ICameraController {
+internal abstract class ViscaIPController : ICameraController {
 
     protected var netConfig: ViscaIPConfig? = null
 
@@ -20,6 +20,10 @@ abstract class ViscaIPController : ICameraController {
         if (netConfig == null) {
             throw RuntimeException("camera controller config is null")
         }
+    }
+
+    protected fun getTurnBackCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getTurnBack(cameraID)
     }
 
     protected fun getTurnLeftCommand(cameraID: Int): ByteArray {
@@ -56,5 +60,33 @@ abstract class ViscaIPController : ICameraController {
 
     protected fun getTurnStopCommand(cameraID: Int): ByteArray {
         return ViscaCommand.getStopTurnData(cameraID)
+    }
+
+    protected fun getZoomTeleCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getZoomTeleData(cameraID)
+    }
+
+    protected fun getZoomWideCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getZoomWideData(cameraID)
+    }
+
+    protected fun getZoomStopCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getZoomStopData(cameraID)
+    }
+
+    protected fun getFocusFarCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getFocusFarData(cameraID)
+    }
+
+    protected fun getFocusNearCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getFocusNearData(cameraID)
+    }
+
+    protected fun getFocusModeCommand(cameraID: Int, isAuto: Boolean): ByteArray {
+        return ViscaCommand.getFocusModeData(cameraID, isAuto)
+    }
+
+    protected fun getFocusStopCommand(cameraID: Int): ByteArray {
+        return ViscaCommand.getFocusStopData(cameraID)
     }
 }

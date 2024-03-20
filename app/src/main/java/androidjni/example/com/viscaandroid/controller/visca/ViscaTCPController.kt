@@ -8,7 +8,7 @@ import java.net.Socket
  * 2024/3/11
  * created by zhangxu
  */
-class ViscaTCPController : ViscaIPController() {
+internal class ViscaTCPController : ViscaIPController() {
 
     private val tcpSocket: Socket by lazy {
         Socket()

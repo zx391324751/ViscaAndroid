@@ -11,7 +11,7 @@ import java.net.InetAddress
  * 2024/3/11
  * created by zhangxu
  */
-class ViscaUDPController : ViscaIPController() {
+internal class ViscaUDPController : ViscaIPController() {
 
     private val socket: DatagramSocket by lazy {
         DatagramSocket()
@@ -20,6 +20,11 @@ class ViscaUDPController : ViscaIPController() {
     override fun finish() {
         super.finish()
         socket.close()
+    }
+
+    override fun turnBack() {
+        super.turnBack()
+        sendViscaCommand(getTurnBackCommand(netConfig!!.cameraID))
     }
 
     override fun turnLeft() {
@@ -65,6 +70,41 @@ class ViscaUDPController : ViscaIPController() {
     override fun turnStop() {
         super.turnStop()
         sendViscaCommand(getTurnStopCommand(netConfig!!.cameraID))
+    }
+
+    override fun zoomWide() {
+        super.zoomWide()
+        sendViscaCommand(getZoomWideCommand(netConfig!!.cameraID))
+    }
+
+    override fun zoomTele() {
+        super.zoomTele()
+        sendViscaCommand(getZoomTeleCommand(netConfig!!.cameraID))
+    }
+
+    override fun zoomStop() {
+        super.zoomStop()
+        sendViscaCommand(getZoomStopCommand(netConfig!!.cameraID))
+    }
+
+    override fun focusFar() {
+        super.focusFar()
+        sendViscaCommand(getFocusFarCommand(netConfig!!.cameraID))
+    }
+
+    override fun focusNear() {
+        super.focusNear()
+        sendViscaCommand(getFocusNearCommand(netConfig!!.cameraID))
+    }
+
+    override fun focusMode(isAuto: Boolean) {
+        super.focusMode(isAuto)
+        sendViscaCommand(getFocusModeCommand(netConfig!!.cameraID, isAuto))
+    }
+
+    override fun focusStop() {
+        super.focusStop()
+        sendViscaCommand(getFocusStopCommand(netConfig!!.cameraID))
     }
 
     private fun sendViscaCommand(command: ByteArray) {
